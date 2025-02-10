@@ -3,6 +3,7 @@ from datetime import datetime
 import pandas as pd
 from data_processing.character_parser import parse_character_info
 from data_processing.story_parser import parse_story_overview
+from data_processing.script_parser import parse_script      # 新增
 from data_processing.scene_parser import parse_scene_design
 from data_processing.shot_parser import parse_shot_script
 from utilities.excel_writer import set_wrap_text
@@ -16,7 +17,8 @@ install_dependencies()
 
 def main_process():
     while True:
-        base_dir = os.getcwd()
+        # 获取脚本所在目录，而不是当前工作目录
+        base_dir = os.path.dirname(os.path.abspath(__file__))
         data_dir = os.path.join(base_dir, "data")
         if not os.path.exists(data_dir):
             os.makedirs(data_dir)
@@ -48,8 +50,9 @@ def main_process():
     try:
         df_overview = parse_story_overview(file_map["1"])
         df_character = parse_character_info(file_map["2"])
-        df_scene = parse_scene_design(file_map["3"])
-        df_shot = parse_shot_script(file_map["4"])
+        df_script = parse_script(file_map["3"])           # 新增
+        df_scene = parse_scene_design(file_map["4"])     # 编号更新
+        df_shot = parse_shot_script(file_map["5"])       # 编号更新
     except Exception as e:
         print(f"处理文件时出错：{e}")
         return
@@ -62,7 +65,8 @@ def main_process():
         with pd.ExcelWriter(excel_path, engine="openpyxl") as writer:
             df_overview.to_excel(writer, sheet_name="故事概要", index=False)
             df_character.to_excel(writer, sheet_name="角色设定", index=False)
-            df_scene.to_excel(writer, sheet_name="场景剧情设计", index=False)
+            df_script.to_excel(writer, sheet_name="剧本", index=False)     # 新增
+            df_scene.to_excel(writer, sheet_name="场景设计", index=False)
             df_shot.to_excel(writer, sheet_name="分镜脚本", index=False)
             set_wrap_text(writer)
         print(f"转换成功！生成的 Excel 文件位于：{excel_path}")
