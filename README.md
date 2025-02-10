@@ -7,6 +7,4 @@ Fantasy AI Studio 制作的剧本转换工具，可将 "FAI视频剧本创作工
 
 ## Installation
 
-Git Clone this repo into custom_nodes folder.
-
-then execute run.bat
+Git Clone this repo into custom_nodes folder & run run.bat
